@@ -67,7 +67,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "⚡ AVRST v10.9.9",
+    Title = "⚡ AVRST v11.0.1",
     Color = CYBER_PURPLE,
 })
 

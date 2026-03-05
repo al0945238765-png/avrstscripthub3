@@ -57,7 +57,7 @@ local Lang = {
 
 local Window = WindUI:CreateWindow({
     Title = "🚀 AVRST Shop",
-     Icon = "rbxassetid://124918340198545",
+     Icon = "rbxassetid://92450448348938",
     Author = "Premium Automation System",
     Folder = "AVRST_PRO",
     Size = UDim2.fromScale(0.42,0.55),

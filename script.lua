@@ -67,9 +67,39 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:Tag({
-    Title = "⚡ AVRST v11.0.1",
+    Title = "⚡ AVRST v11.1.0 P",
     Color = CYBER_PURPLE,
 })
+
+--------------------------------------------------
+-- PLAYER NAME (BOTTOM LEFT)
+--------------------------------------------------
+
+local PlayerNameLabel = Instance.new("TextLabel")
+PlayerNameLabel.Parent = game.CoreGui
+PlayerNameLabel.Size = UDim2.new(0,220,0,32)
+PlayerNameLabel.Position = UDim2.new(0,10,1,-40)
+
+PlayerNameLabel.BackgroundTransparency = 0.2
+PlayerNameLabel.BackgroundColor3 = Color3.fromRGB(20,20,20)
+
+PlayerNameLabel.Text = "👤 "..plr.DisplayName.." | @"..plr.Name
+PlayerNameLabel.TextColor3 = CYBER_BLUE
+PlayerNameLabel.TextScaled = true
+PlayerNameLabel.Font = Enum.Font.GothamBold
+
+PlayerNameLabel.BorderSizePixel = 0
+
+-- มุมโค้ง
+local Corner = Instance.new("UICorner")
+Corner.CornerRadius = UDim.new(0,8)
+Corner.Parent = PlayerNameLabel
+
+-- เส้นเรือง Cyber
+local Stroke = Instance.new("UIStroke")
+Stroke.Color = CYBER_BLUE
+Stroke.Thickness = 1.5
+Stroke.Parent = PlayerNameLabel
 
 --------------------------------------------------
 -- DASHBOARD

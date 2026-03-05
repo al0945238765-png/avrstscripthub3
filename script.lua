@@ -279,6 +279,7 @@ local Settings = Window:Tab({
     Icon = "settings",
 })
 
+-- ปิดสคริป
 Settings:Button({
     Title = Lang[CurrentLang].Unload,
     Callback = function()
@@ -286,6 +287,23 @@ Settings:Button({
     end
 })
 
+-- Join Discord
+Settings:Button({
+    Title = "💬 Join Discord",
+    Callback = function()
+
+        setclipboard("https://discord.gg/Fktbh2vJp")
+
+        WindUI:Notify({
+            Title = "Discord Link Copied",
+            Content = "Discord link copied to clipboard!",
+            Duration = 3
+        })
+
+    end
+})
+
+-- เปลี่ยนภาษา
 Settings:Button({
     Title = "🌍 Switch Language",
     Callback = function()
@@ -305,6 +323,7 @@ Settings:Button({
     end
 })
 
+-- Theme
 Settings:Dropdown({
     Title = "🎨 UI Theme",
     Values = {"Dark","Light"},

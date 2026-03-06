@@ -68,6 +68,7 @@ local username = plr.Name
 
 local thumbType = Enum.ThumbnailType.HeadShot
 local thumbSize = Enum.ThumbnailSize.Size420x420
+
 local avatar = Players:GetUserThumbnailAsync(userId,thumbType,thumbSize)
 
 PlayerTab:Image({
@@ -89,6 +90,16 @@ PlayerTab:Paragraph({
     Content = plr.Team and plr.Team.Name or "None"
 })
 
+PlayerTab:Paragraph({
+    Title = "📅 Account Age",
+    Content = tostring(plr.AccountAge).." days"
+})
+
+PlayerTab:Paragraph({
+    Title = "👥 Players in Server",
+    Content = tostring(#Players:GetPlayers())
+})
+
 --------------------------------------------------
 -- PLAYER FUNCTIONS
 --------------------------------------------------
@@ -103,6 +114,129 @@ local flying = false
 --------------------------------------------------
 
 ScriptTab:Input({
+    Title="⛸️ วิ่งเร็ว",
+    Placeholder="ใส่ค่า Speed",
+    Callback=function(v)
+        speed = tonumber(v) or 16
+    end
+})
+
+ScriptTab:Button({
+    Title="กดใช้ Speed",
+    Callback=function()
+        local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.WalkSpeed = speed
+        end
+    end
+})
+
+ScriptTab:Button({
+    Title="รีเซ็ต Speed",
+    Callback=function()
+        local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.WalkSpeed = 16
+        end
+    end
+})
+
+--------------------------------------------------
+-- JUMP
+--------------------------------------------------
+
+ScriptTab:Input({
+    Title="🦵 โดดสูง",
+    Placeholder="ใส่ค่า Jump",
+    Callback=function(v)
+        jump = tonumber(v) or 50
+    end
+})
+
+ScriptTab:Button({
+    Title="กดใช้ Jump",
+    Callback=function()
+        local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.JumpPower = jump
+        end
+    end
+})
+
+ScriptTab:Button({
+    Title="รีเซ็ต Jump",
+    Callback=function()
+        local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.JumpPower = 50
+        end
+    end
+})
+
+--------------------------------------------------
+-- INFINITE JUMP
+--------------------------------------------------
+
+ScriptTab:Toggle({
+    Title="🪄 กระโดดไม่จำกัด",
+    Callback=function(state)
+        infiniteJump = state
+    end
+})
+
+UIS.JumpRequest:Connect(function()
+    if infiniteJump then
+        local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum:ChangeState(Enum.HumanoidStateType.Jumping)
+        end
+    end
+end)
+
+--------------------------------------------------
+-- FLY
+--------------------------------------------------
+
+ScriptTab:Toggle({
+    Title="🕊️ บิน",
+    Callback=function(state)
+        flying = state
+        
+        local char = plr.Character
+        if not char then return end
+        
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+        
+        if flying then
+            
+            if not root:FindFirstChild("BodyVelocity") then
+                local body = Instance.new("BodyVelocity")
+                body.MaxForce = Vector3.new(100000,100000,100000)
+                body.Velocity = Vector3.new(0,50,0)
+                body.Parent = root
+            end
+            
+        else
+            
+            local bv = root:FindFirstChild("BodyVelocity")
+            if bv then
+                bv:Destroy()
+            end
+            
+        end
+    end
+})
+
+--------------------------------------------------
+-- LOAD NOTIFY
+--------------------------------------------------
+
+WindUI:Notify({
+    Title="AVRST",
+    Content="Script Loaded",
+    Duration=3
+})ScriptTab:Input({
     Title="⛸️ วิ่งเร็ว",
     Placeholder="ใส่ค่า Speed",
     Callback=function(v)

@@ -1,4 +1,32 @@
 --------------------------------------------------
+-- AVRST CYBER PREMIUM UI
+--------------------------------------------------
+
+local Players = game:GetService("Players")
+local plr = Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+local CYBER_BLUE = Color3.fromRGB(37,99,235)
+
+--------------------------------------------------
+-- CREATE WINDOW
+--------------------------------------------------
+
+local Window = WindUI:CreateWindow({
+    Title = "🚀 AVRST Shop",
+    Icon = "rbxassetid://92450448348938",
+    Author = "AVRST Premium Script",
+    Folder = "AVRST_PRO",
+    Size = UDim2.fromScale(0.42,0.55),
+    Transparent = false,
+    Theme = "Dark",
+    SideBarWidth = 190,
+})
+
+--------------------------------------------------
 -- PLAYER INFO (BOTTOM LEFT)
 --------------------------------------------------
 
@@ -31,25 +59,7 @@ Stroke.Thickness = 1.5
 Stroke.Parent = PlayerInfo
 
 --------------------------------------------------
--- PLAYER TAB
---------------------------------------------------
-
-local PlayerTab = Window:Tab({
-    Title = Lang[CurrentLang].Player,
-    Icon = "user",
-})
-
-local SystemEnabled = false
-local SpeedInput = 40
-local JumpInput = 50
-local InfiniteJump = false
-
-local FlyEnabled = false
-local BodyVelocity
-local BodyGyro
-
---------------------------------------------------
--- INFO TAB (FIRST PAGE)
+-- TABS
 --------------------------------------------------
 
 local InfoTab = Window:Tab({
@@ -57,21 +67,53 @@ local InfoTab = Window:Tab({
     Icon = "info",
 })
 
-InfoTab:Button({
-    Title = "💬 Join Discord",
-    Callback = function()
-
-        if setclipboard then
-            setclipboard("https://discord.gg/d4RK49MsJ")
-        end
-
-        WindUI:Notify({
-            Title = "Discord",
-            Content = "ลิงก์ถูกคัดลอกแล้ว",
-            Duration = 3
-        })
-    end
+local ProfileTab = Window:Tab({
+    Title = "👤 โปรไฟล์",
+    Icon = "user-circle",
 })
+
+local PlayerTab = Window:Tab({
+    Title = "👤 Player",
+    Icon = "user",
+})
+
+--------------------------------------------------
+-- PROFILE TAB
+--------------------------------------------------
+
+ProfileTab:Paragraph({
+    Title = "ชื่อผู้เล่น",
+    Content = plr.Name
+})
+
+ProfileTab:Paragraph({
+    Title = "Display Name",
+    Content = plr.DisplayName
+})
+
+ProfileTab:Paragraph({
+    Title = "User ID",
+    Content = tostring(plr.UserId)
+})
+
+ProfileTab:Paragraph({
+    Title = "อายุบัญชี",
+    Content = tostring(plr.AccountAge).." วัน"
+})
+
+ProfileTab:Paragraph({
+    Title = "Team",
+    Content = plr.Team and plr.Team.Name or "ไม่มีทีม"
+})
+
+ProfileTab:Paragraph({
+    Title = "ผู้เล่นในเซิร์ฟเวอร์",
+    Content = tostring(#Players:GetPlayers())
+})
+
+--------------------------------------------------
+-- INFO TAB
+--------------------------------------------------
 
 InfoTab:Paragraph({
     Title = "AVRST Shop",
@@ -79,13 +121,25 @@ InfoTab:Paragraph({
 })
 
 InfoTab:Paragraph({
-    Title = "วิธีใช้",
-    Content = "1. เปิดระบบ Player\n2. ปรับ Speed / Jump\n3. ใช้งานฟีเจอร์ต่างๆ"
-})
-
-InfoTab:Paragraph({
     Title = "ผู้พัฒนา",
     Content = "Script by AVRST Shop"
+})
+
+InfoTab:Button({
+    Title = "💬 Join Discord",
+    Callback = function()
+
+        if setclipboard then
+            setclipboard("https://discord.gg/Fktbh2vJp")
+        end
+
+        WindUI:Notify({
+            Title = "Discord",
+            Content = "คัดลอกลิงก์ Discord แล้ว",
+            Duration = 3
+        })
+
+    end
 })
 
 InfoTab:Button({
@@ -104,6 +158,19 @@ InfoTab:Button({
 })
 
 --------------------------------------------------
+-- PLAYER SYSTEM
+--------------------------------------------------
+
+local SystemEnabled = false
+local SpeedInput = 40
+local JumpInput = 50
+local InfiniteJump = false
+
+local FlyEnabled = false
+local BodyVelocity
+local BodyGyro
+
+--------------------------------------------------
 -- เปิดระบบ
 --------------------------------------------------
 
@@ -114,25 +181,17 @@ PlayerTab:Toggle({
 
         SystemEnabled = v
 
-        if v then
-            WindUI:Notify({
-                Title = "System Enabled",
-                Content = "ระบบ Player เปิดแล้ว",
-                Duration = 3
-            })
-        else
-            WindUI:Notify({
-                Title = "System Disabled",
-                Content = "ระบบ Player ปิดอยู่",
-                Duration = 3
-            })
-        end
+        WindUI:Notify({
+            Title = "System",
+            Content = v and "เปิดระบบแล้ว" or "ปิดระบบแล้ว",
+            Duration = 3
+        })
 
     end
 })
 
 --------------------------------------------------
--- วิ่งเร็ว
+-- SPEED
 --------------------------------------------------
 
 PlayerTab:Input({
@@ -148,14 +207,7 @@ PlayerTab:Button({
     Title = "🔮 กดใช้ วิ่งเร็ว",
     Callback = function()
 
-        if not SystemEnabled then
-            WindUI:Notify({
-                Title = "System Off",
-                Content = "ต้องเปิดระบบก่อน",
-                Duration = 3
-            })
-            return
-        end
+        if not SystemEnabled then return end
 
         local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
 
@@ -180,7 +232,7 @@ PlayerTab:Button({
 })
 
 --------------------------------------------------
--- โดดสูง
+-- JUMP
 --------------------------------------------------
 
 PlayerTab:Input({
@@ -196,14 +248,7 @@ PlayerTab:Button({
     Title = "🔮 กดใช้ โดดสูง",
     Callback = function()
 
-        if not SystemEnabled then
-            WindUI:Notify({
-                Title = "System Off",
-                Content = "ต้องเปิดระบบก่อน",
-                Duration = 3
-            })
-            return
-        end
+        if not SystemEnabled then return end
 
         local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
 
@@ -222,7 +267,6 @@ PlayerTab:Button({
         local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
 
         if hum then
-            hum.UseJumpPower = true
             hum.JumpPower = 50
         end
 
@@ -230,7 +274,7 @@ PlayerTab:Button({
 })
 
 --------------------------------------------------
--- กระโดดไม่จำกัด
+-- INFINITE JUMP
 --------------------------------------------------
 
 PlayerTab:Toggle({
@@ -241,7 +285,7 @@ PlayerTab:Toggle({
     end
 })
 
-game:GetService("UserInputService").JumpRequest:Connect(function()
+UserInputService.JumpRequest:Connect(function()
 
     if InfiniteJump and SystemEnabled then
 
@@ -255,19 +299,16 @@ game:GetService("UserInputService").JumpRequest:Connect(function()
 
 end)
 
+--------------------------------------------------
+-- FLY
+--------------------------------------------------
+
 PlayerTab:Toggle({
     Title = "✈️ บิน",
     Default = false,
     Callback = function(v)
 
-        if not SystemEnabled then
-            WindUI:Notify({
-                Title = "System Off",
-                Content = "ต้องเปิดระบบก่อน",
-                Duration = 3
-            })
-            return
-        end
+        if not SystemEnabled then return end
 
         FlyEnabled = v
 
@@ -279,9 +320,6 @@ PlayerTab:Toggle({
 
         if v then
 
-            if BodyVelocity then BodyVelocity:Destroy() end
-            if BodyGyro then BodyGyro:Destroy() end
-
             BodyVelocity = Instance.new("BodyVelocity")
             BodyVelocity.MaxForce = Vector3.new(1e5,1e5,1e5)
             BodyVelocity.Parent = hrp
@@ -289,12 +327,6 @@ PlayerTab:Toggle({
             BodyGyro = Instance.new("BodyGyro")
             BodyGyro.MaxTorque = Vector3.new(1e5,1e5,1e5)
             BodyGyro.Parent = hrp
-
-            WindUI:Notify({
-                Title = "Fly Enabled",
-                Content = "หันกล้องไปทางที่ต้องการบิน",
-                Duration = 4
-            })
 
         else
 
@@ -305,23 +337,11 @@ PlayerTab:Toggle({
 
     end
 })
-
---------------------------------------------------
--- FLY MOVEMENT
---------------------------------------------------
-
-local RunService = game:GetService("RunService")
 
 RunService.RenderStepped:Connect(function()
 
     if FlyEnabled and BodyVelocity and BodyGyro then
 
-        local char = plr.Character
-        if not char then return end
-
-        local hrp = char:FindFirstChild("HumanoidRootPart")
-        if not hrp then return end
-
         local cam = workspace.CurrentCamera
 
         BodyGyro.CFrame = cam.CFrame
@@ -332,249 +352,16 @@ RunService.RenderStepped:Connect(function()
 end)
 
 --------------------------------------------------
--- APPLY AGAIN WHEN RESPAWN
+-- RESPAWN FIX
 --------------------------------------------------
 
 plr.CharacterAdded:Connect(function(char)
 
     local hum = char:WaitForChild("Humanoid")
-
-    FlyEnabled = false
-    BodyVelocity = nil
-    BodyGyro = nil
 
     if SystemEnabled then
         hum.WalkSpeed = SpeedInput
-        hum.UseJumpPower = true
         hum.JumpPower = JumpInput
     end
 
-end)-- DASHBOARD
---------------------------------------------------
-
-local Dashboard = Window:Tab({
-    Title = Lang[CurrentLang].Dashboard,
-    Icon = "home",
-})
-
-Dashboard:Select()
-
-Dashboard:Paragraph({
-    Title = Lang[CurrentLang].StatusTitle,
-    Desc = Lang[CurrentLang].StatusDesc
-})
-
---------------------------------------------------
--- FARMING TAB
---------------------------------------------------
-
-local Farming = Window:Tab({
-    Title = Lang[CurrentLang].Farming,
-    Icon = "cpu",
-})
-
---------------------------------------------------
--- PLAYER TAB
---------------------------------------------------
-
-local PlayerTab = Window:Tab({
-    Title = Lang[CurrentLang].Player,
-    Icon = "user",
-})
-
-local FlyEnabled = false
-local BodyVelocity
-local BodyGyro
-
-local SpeedValue = 20
-local JumpValue = 50
-
---------------------------------------------------
--- WALK SPEED
---------------------------------------------------
-
-PlayerTab:Slider({
-    Title = "⚡ WalkSpeed",
-    Min = 16,
-    Max = 99999,
-    Default = 20,
-    Rounding = 0,
-    Callback = function(v)
-        SpeedValue = v
-        local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.WalkSpeed = v
-        end
-    end
-})
-
---------------------------------------------------
--- JUMP POWER
---------------------------------------------------
-
-PlayerTab:Slider({
-    Title = "🦘 JumpPower",
-    Min = 50,
-    Max = 99999,
-    Default = 50,
-    Rounding = 0,
-    Callback = function(v)
-        JumpValue = v
-        local hum = plr.Character and plr.Character:FindFirstChildOfClass("Humanoid")
-        if hum then
-            hum.UseJumpPower = true
-            hum.JumpPower = v
-        end
-    end
-})
-
---------------------------------------------------
--- RESET WHEN RESPAWN
---------------------------------------------------
-
-plr.CharacterAdded:Connect(function(char)
-
-    local hum = char:WaitForChild("Humanoid")
-
-    hum.WalkSpeed = SpeedValue
-    hum.UseJumpPower = true
-    hum.JumpPower = JumpValue
-
-    if BodyVelocity then BodyVelocity:Destroy() end
-    if BodyGyro then BodyGyro:Destroy() end
-
-    FlyEnabled = false
-
 end)
-
---------------------------------------------------
--- FLY SYSTEM
---------------------------------------------------
-
-PlayerTab:Toggle({
-    Title = "✈️ Fly",
-    Default = false,
-    Callback = function(v)
-
-        FlyEnabled = v
-
-        local char = plr.Character
-        if not char then return end
-
-        local hrp = char:FindFirstChild("HumanoidRootPart")
-        if not hrp then return end
-
-        if v then
-
-            WindUI:Notify({
-                Title = "✈️ Fly Enabled",
-                Content = Lang[CurrentLang].FlyOn,
-                Duration = 6,
-                Icon = "zap",
-            })
-
-            if BodyVelocity then BodyVelocity:Destroy() end
-            if BodyGyro then BodyGyro:Destroy() end
-
-            BodyVelocity = Instance.new("BodyVelocity")
-            BodyVelocity.MaxForce = Vector3.new(1e5,1e5,1e5)
-            BodyVelocity.Parent = hrp
-
-            BodyGyro = Instance.new("BodyGyro")
-            BodyGyro.MaxTorque = Vector3.new(1e5,1e5,1e5)
-            BodyGyro.Parent = hrp
-
-        else
-
-            WindUI:Notify({
-                Title = "🛑 Fly Disabled",
-                Content = Lang[CurrentLang].FlyOff,
-                Duration = 3,
-                Icon = "x",
-            })
-
-            if BodyVelocity then BodyVelocity:Destroy() end
-            if BodyGyro then BodyGyro:Destroy() end
-
-        end
-
-    end
-})
-
-game:GetService("RunService").RenderStepped:Connect(function()
-
-    if FlyEnabled and BodyVelocity and BodyGyro and plr.Character then
-
-        local hrp = plr.Character:FindFirstChild("HumanoidRootPart")
-        if not hrp then return end
-
-        local cam = workspace.CurrentCamera
-
-        BodyGyro.CFrame = cam.CFrame
-        BodyVelocity.Velocity = cam.CFrame.LookVector * 60
-
-    end
-
-end)
-
---------------------------------------------------
--- SETTINGS TAB
---------------------------------------------------
-
-local Settings = Window:Tab({
-    Title = Lang[CurrentLang].Settings,
-    Icon = "settings",
-})
-
--- ปิดสคริป
-Settings:Button({
-    Title = Lang[CurrentLang].Unload,
-    Callback = function()
-        WindUI:Destroy()
-    end
-})
-
--- Join Discord
-Settings:Button({
-    Title = "💬 Join Discord",
-    Callback = function()
-
-        setclipboard("https://discord.gg/Fktbh2vJp")
-
-        WindUI:Notify({
-            Title = "Discord Link Copied",
-            Content = "Discord link copied to clipboard!",
-            Duration = 3
-        })
-
-    end
-})
-
--- เปลี่ยนภาษา
-Settings:Button({
-    Title = "🌍 Switch Language",
-    Callback = function()
-
-        if CurrentLang == "TH" then
-            CurrentLang = "EN"
-        else
-            CurrentLang = "TH"
-        end
-
-        WindUI:Notify({
-            Title = "🌍 Language Changed",
-            Content = "Re-run script to refresh text",
-            Duration = 3
-        })
-
-    end
-})
-
--- Theme
-Settings:Dropdown({
-    Title = "🎨 UI Theme",
-    Values = {"Dark","Light"},
-    Callback = function(v)
-        Window:SetTheme(v)
-    end
-})
